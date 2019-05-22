@@ -1,0 +1,326 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Wed May 22 18:40:13 2019",
+    "version": "eosio::abi/1.1",
+    "structs": [
+        {
+            "name": "addcomment",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "commentId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "accountName",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "addpoll",
+            "base": "",
+            "fields": [
+                {
+                    "name": "s",
+                    "type": "name"
+                },
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "communityId",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "comments",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "uint64"
+                },
+                {
+                    "name": "commentId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "likes",
+                    "type": "uint32"
+                },
+                {
+                    "name": "dislikes",
+                    "type": "uint32"
+                },
+                {
+                    "name": "account",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "poll",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "communityId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pollStatus",
+                    "type": "uint8"
+                },
+                {
+                    "name": "voteCounts",
+                    "type": "uint32"
+                },
+                {
+                    "name": "commentsCount",
+                    "type": "uint32"
+                },
+                {
+                    "name": "likes",
+                    "type": "uint32"
+                },
+                {
+                    "name": "dislikes",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "pollvotes2",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "option",
+                    "type": "uint32"
+                },
+                {
+                    "name": "account",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "rmpoll",
+            "base": "",
+            "fields": [
+                {
+                    "name": "s",
+                    "type": "name"
+                },
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "rmrfcomments",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "rmrfpolls",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "rmrfvotes",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "stake",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint64"
+                },
+                {
+                    "name": "timestamp",
+                    "type": "uint32"
+                },
+                {
+                    "name": "completion_time",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "upcmntlikes",
+            "base": "",
+            "fields": [
+                {
+                    "name": "commentId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "likesCount",
+                    "type": "uint32"
+                },
+                {
+                    "name": "dislikesCount",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "uppolllikes",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pollId",
+                    "type": "uint64"
+                },
+                {
+                    "name": "likesCount",
+                    "type": "uint32"
+                },
+                {
+                    "name": "dislikesCount",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "vote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "poll_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "option",
+                    "type": "uint64"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "types": [],
+    "actions": [
+        {
+            "name": "addcomment",
+            "type": "addcomment",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "addpoll",
+            "type": "addpoll",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rmpoll",
+            "type": "rmpoll",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rmrfcomments",
+            "type": "rmrfcomments",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rmrfpolls",
+            "type": "rmrfpolls",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rmrfvotes",
+            "type": "rmrfvotes",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upcmntlikes",
+            "type": "upcmntlikes",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "uppolllikes",
+            "type": "uppolllikes",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "vote",
+            "type": "vote",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "comments",
+            "type": "comments",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "poll",
+            "type": "poll",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "pollvotes2",
+            "type": "pollvotes2",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "staketable",
+            "type": "stake",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [],
+    "abi_extensions": []
+}
