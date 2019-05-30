@@ -104,17 +104,17 @@ void lumetokenctr::burn( name from, asset quantity, string memo )
      sub_balance( from, quantity );
 }
 
-void lumetokenctr::stakevote( uint64_t poll_id, uint64_t option, uint64_t amount, std:string voter ) {
-    require_auth(name(voter));
+void lumetokenctr::stakevote( uint64_t poll_id, uint64_t option, uint64_t amount, name voter ) {
+    require_auth(voter);
 
     eosio_assert(amount > 0, "must transfer a positive amount");
 
     // Transfer the LUME to the lumeospollss contract for staking
     asset lumeAssetPack = asset(amount * LUME_PRECISION_MULTIPLIER, LUMESYMBOL);
     action(
-        permission_level{ name(voter) , name("active") }, 
+        permission_level{ voter , name("active") }, 
         _self , name("transfer"),
-        std::make_tuple( name(voter), POLLS_CONTRACT, lumeAssetPack, std::string("stake for vote"))
+        std::make_tuple( voter, POLLS_CONTRACT, lumeAssetPack, std::string("stake for vote"))
     ).send();
 
     // Create the vote in the lumeospollss contract

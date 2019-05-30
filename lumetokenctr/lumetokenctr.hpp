@@ -19,7 +19,7 @@ CONTRACT lumetokenctr : public eosio::contract {
     ACTION issue    ( name to, asset quantity, string memo );
     ACTION transfer ( name from, name to, asset quantity, string memo );
 
-    ACTION stakevote( uint64_t poll_id, uint64_t option, uint64_t amount, string voter );
+    ACTION stakevote( uint64_t poll_id, uint64_t option, uint64_t amount, name voter );
 
 
     inline asset get_supply  ( symbol_code sym )const;

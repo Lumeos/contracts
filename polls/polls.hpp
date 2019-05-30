@@ -24,13 +24,13 @@ public:
     ACTION rmrfcomments(); //admin action
 
     ACTION addpoll(eosio::name s, uint64_t pollId, uint64_t communityId);
-    ACTION rmpoll(eosio::name s, uint64_t pollId); //admin action
-    ACTION uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesCount);
+    ACTION rmpoll(uint64_t pollId); //admin action
+    ACTION uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesCount, name accountName);
 
-    ACTION addcomment(uint64_t pollId, uint64_t commentId, std::string accountName);
-    ACTION upcmntlikes(uint64_t commentId, uint32_t likesCount, uint32_t dislikesCount);
+    ACTION addcomment(uint64_t pollId, uint64_t commentId, name accountName);
+    ACTION upcmntlikes(uint64_t commentId, uint32_t likesCount, uint32_t dislikesCount, name accountName);
 
-    ACTION vote(uint64_t poll_id, uint64_t option, uint64_t amount, std::string voter);
+    ACTION vote(uint64_t poll_id, uint64_t option, uint64_t amount, name voter);
 
     //private: -- not private so the cleos get table call can see the table data.
 
@@ -56,7 +56,7 @@ public:
         uint64_t     key; 
         uint64_t     pollId;
         uint32_t     option;
-        std::string  account; //this account has voted, use this to make sure no one votes > 1
+        name         account; //this account has voted, use this to make sure no one votes > 1
 
         uint64_t primary_key() const { return key; }
         uint64_t by_pollId() const { return pollId; }
@@ -70,7 +70,7 @@ public:
         uint64_t     pollId;
         uint32_t     likes = 0;
         uint32_t     dislikes = 0;
-        std::string  account;
+        name         account;
 
         uint64_t primary_key() const { return key; }
         uint64_t by_commentId() const { return commentId; }

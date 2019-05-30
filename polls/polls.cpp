@@ -75,6 +75,13 @@ void polls::rmrfcomments() {
 void polls::addpoll(eosio::name s, uint64_t pollId, uint64_t communityId) {
     eosio_assert(has_auth(s), "missing required authority of a lumeos user account");
 
+    for(auto& item : _polls) {
+        if (item.pollId == pollId) {
+            eosio::print("Poll with id already exists: ", pollId);
+            return; // if poll id already exists, stop
+        }
+    }
+
     // update the table to include a new poll
     _polls.emplace(get_self(), [&](auto& p) {
         p.key = _polls.available_primary_key();
@@ -88,7 +95,7 @@ void polls::addpoll(eosio::name s, uint64_t pollId, uint64_t communityId) {
     });
 }
 
-void polls::rmpoll(eosio::name s, uint64_t pollId) {
+void polls::rmpoll(uint64_t pollId) {
     eosio_assert(has_auth(_self), "missing required authority of a lumeos admin account");
         
     std::vector<uint64_t> keysForDeletion;
@@ -130,7 +137,7 @@ void polls::rmpoll(eosio::name s, uint64_t pollId) {
 }
 
 // Users have to trigger this action through the lumetokenctr::stakevote action
-void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, std::string voter) {
+void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, name voter) {
     eosio_assert(has_auth(_self), "missing required authority of a lumeos admin account");
 
     // is the poll open
@@ -155,7 +162,7 @@ void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, std::string
     uint64_t stake_id = staketblobj.available_primary_key();
     staketblobj.emplace( _self, [&]( auto& s ) {
         s.id = stake_id;
-        s.user = name(voter);
+        s.user = voter;
         s.amount = amount;
         s.timestamp = now();
         s.completion_time = now() + STAKING_DURATION;
@@ -180,7 +187,8 @@ void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, std::string
     });
 }
 
-void polls::uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesCount) {
+void polls::uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesCount, name accountName) {
+    eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
     for(auto& item : _polls) {
         if (item.pollId == pollId) {
             _polls.modify(item, get_self(), [&](auto& p) {
@@ -192,8 +200,15 @@ void polls::uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesC
     }
 }
 
-void polls::addcomment(uint64_t pollId, uint64_t commentId, std::string accountName) {
-    eosio_assert(has_auth(_self) || has_auth(name(accountName)), "missing required authority of a lumeos user account");
+void polls::addcomment(uint64_t pollId, uint64_t commentId, name accountName) {
+    eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
+
+    for(auto& item : _comments) {
+        if (item.commentId == commentId) {
+            eosio::print("Comment with id already exists: ", commentId);
+            return; // if comment id already exists, stop
+        }
+    }
 
     _comments.emplace(get_self(), [&](auto& cmnt){
         cmnt.key = _votes2.available_primary_key();
@@ -214,7 +229,8 @@ void polls::addcomment(uint64_t pollId, uint64_t commentId, std::string accountN
     }
 }
 
-void polls::upcmntlikes(uint64_t commentId, uint32_t likesCount, uint32_t dislikesCount) {
+void polls::upcmntlikes(uint64_t commentId, uint32_t likesCount, uint32_t dislikesCount, name accountName) {
+    eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
     for(auto& item : _comments) {
         if (item.commentId == commentId) {
             _comments.modify(item, get_self(), [&](auto& c) {

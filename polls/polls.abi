@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Wed May 22 18:40:13 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Thu May 30 15:48:09 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "accountName",
-                    "type": "string"
+                    "type": "name"
                 }
             ]
         },
@@ -64,7 +64,7 @@
                 },
                 {
                     "name": "account",
-                    "type": "string"
+                    "type": "name"
                 }
             ]
         },
@@ -124,7 +124,7 @@
                 },
                 {
                     "name": "account",
-                    "type": "string"
+                    "type": "name"
                 }
             ]
         },
@@ -132,10 +132,6 @@
             "name": "rmpoll",
             "base": "",
             "fields": [
-                {
-                    "name": "s",
-                    "type": "name"
-                },
                 {
                     "name": "pollId",
                     "type": "uint64"
@@ -198,6 +194,10 @@
                 {
                     "name": "dislikesCount",
                     "type": "uint32"
+                },
+                {
+                    "name": "accountName",
+                    "type": "name"
                 }
             ]
         },
@@ -216,6 +216,10 @@
                 {
                     "name": "dislikesCount",
                     "type": "uint32"
+                },
+                {
+                    "name": "accountName",
+                    "type": "name"
                 }
             ]
         },
@@ -237,7 +241,7 @@
                 },
                 {
                     "name": "voter",
-                    "type": "string"
+                    "type": "name"
                 }
             ]
         }
