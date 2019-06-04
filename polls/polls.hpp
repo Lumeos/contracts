@@ -36,8 +36,7 @@ public:
 
     TABLE poll
     {
-        uint64_t      key;                // primary key
-        uint64_t      pollId;             // second key, unique
+        uint64_t      key;                // primary key - pollId
         uint64_t      communityId = 0;    // which community the poll belongs to
         uint8_t       pollStatus = 0;     // staus where 0 = closed, 1 = open, 2 = finished
         uint32_t      voteCounts = 0;     // the number of votes for each itme -- this to be pulled out to separte table.
@@ -46,9 +45,8 @@ public:
         uint32_t      dislikes = 0;
 
         uint64_t primary_key() const { return key; }
-        uint64_t by_pollId() const { return pollId; }
     };
-    typedef eosio::multi_index<"poll"_n, poll, eosio::indexed_by<"pollid"_n, eosio::const_mem_fun<poll, uint64_t, &poll::by_pollId>>> pollstable;
+    typedef eosio::multi_index<"poll"_n, poll> pollstable;
 
     // V2 of pollvotes (pollvotes is deleted now)
     TABLE pollvotes2
@@ -66,29 +64,14 @@ public:
     TABLE comments
     {
         uint64_t     key; 
-        uint64_t     commentId;
         uint64_t     pollId;
         uint32_t     likes = 0;
         uint32_t     dislikes = 0;
         name         account;
 
         uint64_t primary_key() const { return key; }
-        uint64_t by_commentId() const { return commentId; }
     };
-    typedef eosio::multi_index<"comments"_n, comments, eosio::indexed_by<"commentid"_n, eosio::const_mem_fun<comments, uint64_t, &comments::by_commentId>>> commentstable;
-
-    // Struct to keep track of stakes 
-    TABLE stake {
-        uint64_t id;
-        name user;
-        uint64_t amount;
-        uint32_t timestamp;
-        uint32_t completion_time;
-
-        uint64_t primary_key()const { return id; }
-        uint64_t get_user()const { return user.value; }
-    };
-    typedef eosio::multi_index<"staketable"_n, stake, eosio::indexed_by<"byuser"_n, eosio::const_mem_fun<stake, uint64_t, &stake::get_user>>> staketbl;
+    typedef eosio::multi_index<"comments"_n, comments> commentstable;
 
     //// local instances of the multi indexes
     pollstable _polls;

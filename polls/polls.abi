@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Thu May 30 15:48:09 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Jun  4 13:02:02 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -47,10 +47,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "commentId",
-                    "type": "uint64"
-                },
-                {
                     "name": "pollId",
                     "type": "uint64"
                 },
@@ -74,10 +70,6 @@
             "fields": [
                 {
                     "name": "key",
-                    "type": "uint64"
-                },
-                {
-                    "name": "pollId",
                     "type": "uint64"
                 },
                 {
@@ -152,32 +144,6 @@
             "name": "rmrfvotes",
             "base": "",
             "fields": []
-        },
-        {
-            "name": "stake",
-            "base": "",
-            "fields": [
-                {
-                    "name": "id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "user",
-                    "type": "name"
-                },
-                {
-                    "name": "amount",
-                    "type": "uint64"
-                },
-                {
-                    "name": "timestamp",
-                    "type": "uint32"
-                },
-                {
-                    "name": "completion_time",
-                    "type": "uint32"
-                }
-            ]
         },
         {
             "name": "upcmntlikes",
@@ -312,13 +278,6 @@
         {
             "name": "pollvotes2",
             "type": "pollvotes2",
-            "index_type": "i64",
-            "key_names": [],
-            "key_types": []
-        },
-        {
-            "name": "staketable",
-            "type": "stake",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

@@ -8,7 +8,6 @@ void polls::rmrfpolls() {
     eosio::print("rmrfpolls");
     int i = 0;
     for(auto& item : _polls) {
-        eosio::print(item.key);
         if (i++ < 50) {
             keysForDeletion.push_back(item.key);   
         } else {
@@ -18,7 +17,6 @@ void polls::rmrfpolls() {
     
     // now delete each item for that poll
     for (uint64_t key : keysForDeletion) {
-        eosio::print(key);
         auto itr = _polls.find(key);
         if (itr != _polls.end()) {
             _polls.erase(itr);
@@ -75,17 +73,15 @@ void polls::rmrfcomments() {
 void polls::addpoll(eosio::name s, uint64_t pollId, uint64_t communityId) {
     eosio_assert(has_auth(s), "missing required authority of a lumeos user account");
 
-    for(auto& item : _polls) {
-        if (item.pollId == pollId) {
-            eosio::print("Poll with id already exists: ", pollId);
-            return; // if poll id already exists, stop
-        }
+    auto itr = _polls.find(pollId);
+    if (itr != _polls.end()) {
+        eosio::print("Poll with id already exists: ", pollId);
+        return; // if poll id already exists, stop
     }
 
     // update the table to include a new poll
-    _polls.emplace(get_self(), [&](auto& p) {
-        p.key = _polls.available_primary_key();
-        p.pollId = pollId;
+    _polls.emplace(s, [&](auto& p) {
+        p.key = pollId;
         p.communityId = communityId;
         p.pollStatus = 0;
         p.voteCounts = 0;
@@ -98,25 +94,10 @@ void polls::addpoll(eosio::name s, uint64_t pollId, uint64_t communityId) {
 void polls::rmpoll(uint64_t pollId) {
     eosio_assert(has_auth(_self), "missing required authority of a lumeos admin account");
         
-    std::vector<uint64_t> keysForDeletion;
-    // find items which are for the named poll
-    for(auto& item : _polls) {
-        if (item.pollId == pollId) {
-            keysForDeletion.push_back(item.key);   
-        }
+    auto foundPoll = _polls.find(pollId);
+    if (foundPoll != _polls.end()) {
+        _polls.erase(foundPoll);
     }
-    
-    // now delete each item for that poll
-    for (uint64_t key : keysForDeletion) {
-        eosio::print("remove from _polls ", key);
-        auto itr = _polls.find(key);
-        if (itr != _polls.end()) {
-            _polls.erase(itr);
-        }
-    }
-
-
-    // add remove votes ... don't need it the actions are permanently stored on the block chain
 
     std::vector<uint64_t> keysForDeletionFromVotes;
     // find items which are for the named poll
@@ -140,15 +121,17 @@ void polls::rmpoll(uint64_t pollId) {
 void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, name voter) {
     eosio_assert(has_auth(_self), "missing required authority of a lumeos admin account");
 
-    // is the poll open
-    for(auto& item : _polls) {
-        if (item.pollId == poll_id) {
-            if (item.pollStatus != 1) {
-                return;
-            }
-            break; // only need to check status once
+    auto foundPoll = _polls.find(poll_id);
+    if (foundPoll == _polls.end()) { // did not find poll
+        eosio::print("Poll with id does not exist: ", poll_id);
+        return;
+    } else { // found poll
+        if (foundPoll->pollStatus != 1) {
+            eosio::print("Can only vote on open polls");
+            return;
         }
     }
+    // at this point the poll is found and opne
 
     // has account name already voted?  
     for(auto& vote : _votes2) {
@@ -157,29 +140,14 @@ void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, name voter)
         }
     }
 
-    // Create the stake object
-    staketbl staketblobj(_self, _self.value);
-    uint64_t stake_id = staketblobj.available_primary_key();
-    staketblobj.emplace( _self, [&]( auto& s ) {
-        s.id = stake_id;
-        s.user = voter;
-        s.amount = amount;
-        s.timestamp = now();
-        s.completion_time = now() + STAKING_DURATION;
+    // find the poll and the option and increment the count
+
+    _polls.modify(foundPoll, voter, [&](auto& p) {
+        p.voteCounts = p.voteCounts + 1;
     });
 
-    // find the poll and the option and increment the count
-    for(auto& item : _polls) {
-        if (item.pollId == poll_id) {
-            _polls.modify(item, get_self(), [&](auto& p) {
-                p.voteCounts = p.voteCounts + 1;
-            });
-            break;
-        }
-    }
-
     // record that voter has voted
-    _votes2.emplace(get_self(), [&](auto& pv){
+    _votes2.emplace(voter, [&](auto& pv){
         pv.key = _votes2.available_primary_key();
         pv.pollId = poll_id;
         pv.option = option;
@@ -189,57 +157,59 @@ void polls::vote(uint64_t poll_id, uint64_t option, uint64_t amount, name voter)
 
 void polls::uppolllikes(uint64_t pollId, uint32_t likesCount, uint32_t dislikesCount, name accountName) {
     eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
-    for(auto& item : _polls) {
-        if (item.pollId == pollId) {
-            _polls.modify(item, get_self(), [&](auto& p) {
-                p.likes = likesCount;
-                p.dislikes = dislikesCount;
-            });
-            break;
-        }
+
+    auto foundPoll = _polls.find(pollId);
+    if (foundPoll == _polls.end()) { // did not find poll
+        eosio::print("Poll with id does not exist: ", pollId);
+        return;
     }
+    _polls.modify(foundPoll, accountName, [&](auto& p) {
+        p.likes = likesCount;
+        p.dislikes = dislikesCount;
+    });
 }
 
 void polls::addcomment(uint64_t pollId, uint64_t commentId, name accountName) {
     eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
 
-    for(auto& item : _comments) {
-        if (item.commentId == commentId) {
-            eosio::print("Comment with id already exists: ", commentId);
-            return; // if comment id already exists, stop
-        }
+    auto foundPoll = _polls.find(pollId);
+    if (foundPoll == _polls.end()) { // did not find poll
+        eosio::print("Poll with id does not exist: ", pollId);
+        return;
     }
 
-    _comments.emplace(get_self(), [&](auto& cmnt){
-        cmnt.key = _votes2.available_primary_key();
+    auto foundComment = _comments.find(commentId);
+    if (foundComment != _comments.end()) {
+        eosio::print("Comment with id already exist: ", commentId);
+        return;
+    }
+
+    _comments.emplace(accountName, [&](auto& cmnt){
+        cmnt.key = commentId;
         cmnt.pollId = pollId;
-        cmnt.commentId = commentId;
         cmnt.account = accountName;
         cmnt.likes = 1;
         cmnt.dislikes = 0;
     });
 
-    for(auto& item : _polls) {
-        if (item.pollId == pollId) {
-            _polls.modify(item, get_self(), [&](auto& p) {
-                p.commentsCount = p.commentsCount + 1;
-            });
-            break;
-        }
-    }
+    _polls.modify(foundPoll, accountName, [&](auto& p) {
+        p.commentsCount = p.commentsCount + 1;
+    });
 }
 
 void polls::upcmntlikes(uint64_t commentId, uint32_t likesCount, uint32_t dislikesCount, name accountName) {
     eosio_assert(has_auth(_self) || has_auth(accountName), "missing required authority of a lumeos user account");
-    for(auto& item : _comments) {
-        if (item.commentId == commentId) {
-            _comments.modify(item, get_self(), [&](auto& c) {
-                c.likes = likesCount;
-                c.dislikes = dislikesCount;
-            });
-            break;
-        }
+
+    auto foundComment = _comments.find(commentId);
+    if (foundComment == _comments.end()) {
+        eosio::print("Comment with id does not exist: ", commentId);
+        return;
     }
+
+    _comments.modify(foundComment, accountName, [&](auto& c) {
+        c.likes = likesCount;
+        c.dislikes = dislikesCount;
+    });
 }
 
 EOSIO_DISPATCH( polls, (rmrfpolls)(rmrfvotes)(rmrfcomments)(addpoll)(rmpoll)(vote)(uppolllikes)(addcomment)(upcmntlikes))

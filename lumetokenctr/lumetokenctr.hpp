@@ -19,16 +19,11 @@ CONTRACT lumetokenctr : public eosio::contract {
     ACTION issue    ( name to, asset quantity, string memo );
     ACTION transfer ( name from, name to, asset quantity, string memo );
 
-    ACTION stakevote( uint64_t poll_id, uint64_t option, uint64_t amount, name voter );
-
-
     inline asset get_supply  ( symbol_code sym )const;
     inline asset get_balance ( name owner, symbol_code sym )const;
 
   private:
     const eosio::symbol LUMESYMBOL = symbol(symbol_code("LUME"), 3);
-    const int64_t LUME_PRECISION_MULTIPLIER = 1000;
-    const name POLLS_CONTRACT = name("lumeospollss");
 
     TABLE account 
     {

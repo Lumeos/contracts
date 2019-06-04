@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Thu May 30 15:36:41 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Jun  4 12:45:29 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -81,28 +81,6 @@
             ]
         },
         {
-            "name": "stakevote",
-            "base": "",
-            "fields": [
-                {
-                    "name": "poll_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "option",
-                    "type": "uint64"
-                },
-                {
-                    "name": "amount",
-                    "type": "uint64"
-                },
-                {
-                    "name": "voter",
-                    "type": "name"
-                }
-            ]
-        },
-        {
             "name": "transfer",
             "base": "",
             "fields": [
@@ -140,11 +118,6 @@
         {
             "name": "issue",
             "type": "issue",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "stakevote",
-            "type": "stakevote",
             "ricardian_contract": ""
         },
         {
