@@ -1,6 +1,7 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Jun  4 12:45:29 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
     "version": "eosio::abi/1.1",
+    "types": [],
     "structs": [
         {
             "name": "account",
@@ -8,6 +9,10 @@
             "fields": [
                 {
                     "name": "balance",
+                    "type": "asset"
+                },
+                {
+                    "name": "locked",
                     "type": "asset"
                 }
             ]
@@ -17,16 +22,26 @@
             "base": "",
             "fields": [
                 {
-                    "name": "from",
+                    "name": "owner",
                     "type": "name"
                 },
                 {
                     "name": "quantity",
                     "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "close",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
                 },
                 {
-                    "name": "memo",
-                    "type": "string"
+                    "name": "symbol",
+                    "type": "symbol"
                 }
             ]
         },
@@ -81,6 +96,70 @@
             ]
         },
         {
+            "name": "lock",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "days",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "locked_fund",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lock_time",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "open",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "ram_payer",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "rm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
             "name": "transfer",
             "base": "",
             "fields": [
@@ -101,13 +180,75 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "name": "transferlock",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "days",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "unlock",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "unlocking_fund",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unlocked_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
         }
     ],
-    "types": [],
     "actions": [
         {
             "name": "burn",
             "type": "burn",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "close",
+            "type": "close",
             "ricardian_contract": ""
         },
         {
@@ -121,8 +262,33 @@
             "ricardian_contract": ""
         },
         {
+            "name": "lock",
+            "type": "lock",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "open",
+            "type": "open",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rm",
+            "type": "rm",
+            "ricardian_contract": ""
+        },
+        {
             "name": "transfer",
             "type": "transfer",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "transferlock",
+            "type": "transferlock",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "unlock",
+            "type": "unlock",
             "ricardian_contract": ""
         }
     ],
@@ -135,14 +301,27 @@
             "key_types": []
         },
         {
+            "name": "locked",
+            "type": "locked_fund",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
             "name": "stat",
             "type": "currency_stats",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "unlocking",
+            "type": "unlocking_fund",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
         }
     ],
     "ricardian_clauses": [],
-    "variants": [],
-    "abi_extensions": []
+    "variants": []
 }
